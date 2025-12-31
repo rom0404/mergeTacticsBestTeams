@@ -6,7 +6,7 @@
 #include <tuple>
 using namespace std;
 //=============================================================================
-//===========MAIN FUNCTION AT LINE 130, GO THERE TO EDIT FILTERS===============
+//===========MAIN FUNCTION AT LINE 140, GO THERE TO EDIT FILTERS===============
 //=============================================================================
 
 
@@ -33,9 +33,8 @@ const string ANSI_BG_RED = "\033[48;5;196m";
 const string ANSI_BG_PURPLE = "\033[48;5;129m";
 const string ANSI_BG_ORANGE = "\033[48;5;208m";
 const string ANSI_BG_GREEN = "\033[48;5;46m";
-const string ANSI_BG_TEAL = "\033[48;5;51m";
-const string ANSI_BG_BLUE = "\033[48;5;21m";
 const string ANSI_BG_CYAN = "\033[48;5;51m";
+const string ANSI_BG_BLUE = "\033[48;5;21m";
 const string ANSI_BG_BROWN = "\033[48;5;130m";
 const string ANSI_BG_YELLOW = "\033[48;5;226m";
 const string ANSI_BG_LIGHT_GREEN = "\033[48;5;119m";
@@ -78,7 +77,7 @@ map<int, string> traitColors = {
     {assassin, ANSI_BG_RED},
     {blaster, ANSI_BG_BROWN},
     {brawler, ANSI_BG_PALE_RED},
-    {undead, ANSI_BG_TEAL},
+    {undead, ANSI_BG_CYAN},
     {ace, ANSI_BG_PURPLE},
     {brutalist, ANSI_BG_PALE_RED},
     {giant, ANSI_BG_YELLOW},
@@ -132,6 +131,7 @@ vector<vector<Troop>> filterByTrait(const vector<vector<Troop>>& teams, int trai
 vector<vector<Troop>> filterByTroop(const vector<vector<Troop>>& teams, const string& troopName);
 void sortTeamsByCost(vector<vector<Troop>>& teams);
 void printTeams(const vector<vector<Troop>>& teams);
+void printSynergyBar(int trait, int count);
 
 
 //=============================================================================
@@ -149,7 +149,7 @@ int main() {
     allTeams = filterByTroop(allTeams, golden_knight_name); //change golden_knight to any troop name if you want to filter by troop
 
     //filter teams by trait
-    allTeams = filterByTrait(allTeams, ranger); //change noble to any trait if you want to filter by trait
+    allTeams = filterByTrait(allTeams, blaster); //change noble to any trait if you want to filter by trait
 
     //set specific trait scores
     // setTraitScore(noble, score_trait_2+1, score_trait_4+1, score_trait_6+1); //change noble to any trait if you want to set specific trait scores
@@ -233,23 +233,14 @@ int gradeTeam(const vector<Troop>& team) {
     }
     int score = 0;
 
-    for (int i = noble; i <= pekka_trait; i++)
+    for (auto const& [trait, count] : traitCounts)
     {
         int s2, s4, s6;
-        tie(s2, s4, s6) = traitScores[i];
+        tie(s2, s4, s6) = traitScores[trait];
 
-        if (traitCounts[i] >= 6)
-        {
-            score += s6;
-        }
-        else if (traitCounts[i] >= 4)
-        {
-            score += s4;
-        }
-        else if (traitCounts[i] >= 2)
-        {
-            score += s2;
-        }
+        if (count >= 6) score += s6;
+        else if (count >= 4) score += s4;
+        else if (count >= 2) score += s2;
     }
 
     return score;
@@ -334,20 +325,21 @@ void printTeams(const vector<vector<Troop>>& teams) {
         }
 
         for (auto const& [trait, count] : traitCounts) {
-            if (count >= 2) {
-                string color = traitColors[trait];
-                string name = traitNames[trait];
-                for (int i = 0; i < (count-1)*4; i++) {
-                    cout<<color<<" "<<ANSI_RESET;
-                }
-                cout << color << name << ": " << count << ANSI_RESET;
-                for (int i = 0; i < (count-1)*4; i++) {
-                    cout<<color<<" "<<ANSI_RESET;
-                }
-                cout<<ANSI_RESET;
-            }
+            printSynergyBar(trait, count);
         }
-        cout << endl;
+        cout << ANSI_RESET << endl;
+    }
+}
+
+void printSynergyBar(int trait, int count) {
+    if (count >= 2) {
+        string color = traitColors[trait];
+        string name = traitNames[trait];
+        int padding = (count - 1) * 4;
+        
+        for (int i = 0; i < padding; i++) cout << color << " " ;
+        cout << name << ": " << count << ANSI_RESET;
+        for (int i = 0; i < padding; i++) cout << color << " " ;
     }
 }
 
