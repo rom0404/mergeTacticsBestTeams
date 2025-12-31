@@ -3,8 +3,13 @@
 #include <string>
 #include <algorithm>
 #include <map>
-using namespace std;
 #include <tuple>
+using namespace std;
+//=============================================================================
+//===========MAIN FUNCTION AT LINE 130, GO THERE TO EDIT FILTERS===============
+//=============================================================================
+
+
 
 // Trait constants
 const int noble = 1;
@@ -129,6 +134,9 @@ void sortTeamsByCost(vector<vector<Troop>>& teams);
 void printTeams(const vector<vector<Troop>>& teams);
 
 
+//=============================================================================
+//===============================MAIN FUNCTION=================================
+//=============================================================================
 int main() {
     //initialize scores and troops
     initializeScores();
