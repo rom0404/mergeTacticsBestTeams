@@ -11,3 +11,6 @@ generate best teams according to:
 # how to use:
 1. go to main function and change team size
 2. change filters in main function
+
+
+this is just a c++ prototype for personal use
