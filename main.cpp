@@ -41,7 +41,9 @@ const string ANSI_BG_LIGHT_GREEN = "\033[48;5;119m";
 const string ANSI_BG_LIGHT_ORANGE = "\033[48;5;215m";
 const string ANSI_BG_PALE_RED = "\033[48;5;203m"; 
 const string ANSI_BG_PINK = "\033[48;5;200m";
-const string ANSI_BG_GOLD = "\033[43m"; // Replacing generic yellow with gold/yellow background
+const string ANSI_BG_GOLD = "\033[43m"; 
+const string ANSI_TEXT_BLACK = "\033[30m";
+const string ANSI_TEXT_WHITE = "\033[37m";
 
 // Scoring constants
 const int score_trait_2 = 2;
@@ -86,30 +88,30 @@ map<int, string> traitColors = {
 };
 
 // Troop Name Constants
-const std::string goblin_name = "Goblin";
-const std::string spear_goblin_name = "Spear Goblin";
-const std::string barbarian_name = "Barbarian";
-const std::string skeleton_dragons_name = "Skeleton Dragons";
-const std::string wizard_name = "Wizard";
-const std::string musketeer_name = "Musketeer";
-const std::string valkyrie_name = "Valkyrie";
-const std::string pekka_name = "P.E.K.K.A";
-const std::string prince_name = "Prince";
-const std::string dart_goblin_name = "Dart Goblin";
-const std::string electro_giant_name = "Electro Giant";
-const std::string executioner_name = "Executioner";
-const std::string witch_name = "Witch";
-const std::string princess_name = "Princess";
-const std::string mega_knight_name = "Mega Knight";
-const std::string royal_ghost_name = "Royal Ghost";
-const std::string bandit_name = "Bandit";
-const std::string goblin_machine_name = "Goblin Machine";
-const std::string skeleton_king_name = "Skeleton King";
-const std::string golden_knight_name = "Golden Knight";
-const std::string archer_queen_name = "Archer Queen";
-const std::string royal_giant_name = "Royal Giant";
-const std::string mini_pekka_name = "Mini P.E.K.K.A";
-const std::string monk_name = "Monk";
+const string goblin_name = "Goblin";
+const string spear_goblin_name = "Spear Goblin";
+const string barbarian_name = "Barbarian";
+const string skeleton_dragons_name = "Skeleton Dragons";
+const string wizard_name = "Wizard";
+const string musketeer_name = "Musketeer";
+const string valkyrie_name = "Valkyrie";
+const string pekka_name = "P.E.K.K.A";
+const string prince_name = "Prince";
+const string dart_goblin_name = "Dart Goblin";
+const string electro_giant_name = "Electro Giant";
+const string executioner_name = "Executioner";
+const string witch_name = "Witch";
+const string princess_name = "Princess";
+const string mega_knight_name = "Mega Knight";
+const string royal_ghost_name = "Royal Ghost";
+const string bandit_name = "Bandit";
+const string goblin_machine_name = "Goblin Machine";
+const string skeleton_king_name = "Skeleton King";
+const string golden_knight_name = "Golden Knight";
+const string archer_queen_name = "Archer Queen";
+const string royal_giant_name = "Royal Giant";
+const string mini_pekka_name = "Mini P.E.K.K.A";
+const string monk_name = "Monk";
 
 // Troop as a struct
 struct Troop {
@@ -314,8 +316,8 @@ void printTeams(const vector<vector<Troop>>& teams) {
         for (const auto& troop : team) {
             cout << troop.name << "(" << troop.elixirCost << ") ";
         }
-        cout << "\n" << ANSI_BG_PINK << "Total Cost:" << ANSI_RESET << " " << calculateTeamCost(team);
-        cout << "\n" << ANSI_BG_YELLOW << " Score:" << ANSI_RESET << " " << gradeTeam(team) << endl;
+        cout << "\n" << ANSI_BG_PINK << ANSI_TEXT_BLACK << "Total Cost:" << ANSI_RESET << " " << calculateTeamCost(team);
+        cout << "\n" << ANSI_BG_YELLOW << ANSI_TEXT_BLACK << " Score:" << ANSI_RESET << " " << gradeTeam(team) << endl;
         
         // Print trait bars
         map<int, int> traitCounts;
@@ -333,13 +335,22 @@ void printTeams(const vector<vector<Troop>>& teams) {
 
 void printSynergyBar(int trait, int count) {
     if (count >= 2) {
-        string color = traitColors[trait];
+        string bgColor = traitColors[trait];
         string name = traitNames[trait];
+        
+        // Determine text color based on background brightness
+        string textColor = ANSI_TEXT_WHITE; // Default
+        if (trait == noble || trait == ranger || trait == undead || 
+            trait == giant || trait == superstar || 
+            trait == brawler || trait == brutalist) {
+            textColor = ANSI_TEXT_BLACK;
+        }
+
         int padding = (count - 1) * 4;
         
-        for (int i = 0; i < padding; i++) cout << color << " " ;
-        cout << name << ": " << count << ANSI_RESET;
-        for (int i = 0; i < padding; i++) cout << color << " " ;
+        for (int i = 0; i < padding; i++) cout << bgColor << " " ;
+        cout << bgColor << textColor << name << ": " << count << ANSI_RESET;
+        for (int i = 0; i < padding; i++) cout << bgColor << " " ;
     }
 }
 
