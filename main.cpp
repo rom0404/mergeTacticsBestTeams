@@ -12,19 +12,20 @@ using namespace std;
 
 
 // Trait constants
-const int noble = 1;
-const int clan = 2;
-const int ranger = 3;
-const int goblin = 4;
-const int assassin = 5;
-const int blaster = 6;
-const int brawler = 7;
-const int undead = 8;
-const int ace = 9;
-const int brutalist = 10;
-const int giant = 11;
+const int clan = 1;
+const int noble = 2;
+const int goblin = 3;
+const int undead = 4;
+const int ace = 5;
+const int fire = 6;
+const int titan = 7;
+const int warrior = 8;
+const int marksman = 9;
+const int tank = 10;
+const int assassin = 11;
 const int superstar = 12;
-const int pekka_trait = 13;
+const int hinder = 13;
+const int dragon = 14;
 
 // ANSI Color Constants (Backgrounds)
 const string ANSI_RESET = "\033[0m";
@@ -55,63 +56,63 @@ map<int, tuple<int, int, int>> traitScores;
 
 // Trait name map
 map<int, string> traitNames = {
-    {noble, "Noble"},
     {clan, "Clan"},
-    {ranger, "Ranger"},
+    {noble, "Noble"},
     {goblin, "Goblin"},
-    {assassin, "Assassin"},
-    {blaster, "Blaster"},
-    {brawler, "Brawler"},
     {undead, "Undead"},
     {ace, "Ace"},
-    {brutalist, "Brutalist"},
-    {giant, "Giant"},
+    {fire, "Fire"},
+    {titan, "Titan"},
+    {warrior, "Warrior"},
+    {marksman, "Marksman"},
+    {tank, "Tank"},
+    {assassin, "Assassin"},
     {superstar, "Superstar"},
-    {pekka_trait, "P.E.K.K.A"}
+    {hinder, "Hinder"},
+    {dragon, "Dragon"}
 };
 
 // Trait color map
 map<int, string> traitColors = {
-    {noble, ANSI_BG_GOLD},
     {clan, ANSI_BG_BLUE},
-    {ranger, ANSI_BG_CYAN},
+    {noble, ANSI_BG_GOLD},
     {goblin, ANSI_BG_DARK_GREEN},
-    {assassin, ANSI_BG_RED},
-    {blaster, ANSI_BG_BROWN},
-    {brawler, ANSI_BG_PALE_RED},
     {undead, ANSI_BG_CYAN},
     {ace, ANSI_BG_PURPLE},
-    {brutalist, ANSI_BG_PALE_RED},
-    {giant, ANSI_BG_YELLOW},
-    {superstar, ANSI_BG_CYAN},
-    {pekka_trait, ANSI_BG_PURPLE}
+    {fire, ANSI_BG_ORANGE},
+    {titan, ANSI_BG_YELLOW},
+    {warrior, ANSI_BG_RED},
+    {marksman, ANSI_BG_CYAN},
+    {tank, ANSI_BG_LIGHT_GREEN},
+    {assassin, ANSI_BG_RED},
+    {superstar, ANSI_BG_PINK},
+    {hinder, ANSI_BG_PURPLE},
+    {dragon, ANSI_BG_LIGHT_GREEN}
 };
 
 // Troop Name Constants
-const string goblin_name = "Goblin";
-const string spear_goblin_name = "Spear Goblin";
 const string barbarian_name = "Barbarian";
-const string skeleton_dragons_name = "Skeleton Dragons";
-const string wizard_name = "Wizard";
-const string musketeer_name = "Musketeer";
+const string archer_name = "Archer";
 const string valkyrie_name = "Valkyrie";
-const string pekka_name = "P.E.K.K.A";
+const string archer_queen_name = "Archer Queen";
 const string prince_name = "Prince";
+const string musketeer_name = "Musketeer";
+const string knight_name = "Knight";
+const string golden_knight_name = "Golden Knight";
+const string goblin_demolisher_name = "Goblin Demolisher";
 const string dart_goblin_name = "Dart Goblin";
-const string electro_giant_name = "Electro Giant";
-const string executioner_name = "Executioner";
-const string witch_name = "Witch";
-const string princess_name = "Princess";
-const string mega_knight_name = "Mega Knight";
-const string royal_ghost_name = "Royal Ghost";
-const string bandit_name = "Bandit";
+const string goblin_name = "Goblin";
 const string goblin_machine_name = "Goblin Machine";
 const string skeleton_king_name = "Skeleton King";
-const string golden_knight_name = "Golden Knight";
-const string archer_queen_name = "Archer Queen";
-const string royal_giant_name = "Royal Giant";
-const string mini_pekka_name = "Mini P.E.K.K.A";
+const string giant_skeleton_name = "Giant Skeleton";
+const string witch_name = "Witch";
+const string skeleton_dragons_name = "Skeleton Dragons";
 const string monk_name = "Monk";
+const string pekka_name = "P.E.K.K.A";
+const string wizard_name = "Wizard";
+const string baby_dragon_name = "Baby Dragon";
+const string royal_giant_name = "Royal Giant";
+const string giant_name = "Giant";
 
 // Troop as a struct
 struct Troop {
@@ -148,11 +149,11 @@ int main() {
     auto allTeams = generateTeams(troops, teamSize);
 
     //filter teams by troop
-    allTeams = filterByTroop(allTeams, golden_knight_name); //change golden_knight to any troop name if you want to filter by troop
+    // allTeams = filterByTroop(allTeams, golden_knight_name); //change golden_knight to any troop name if you want to filter by troop
 
     //filter teams by trait
-    allTeams = filterByTrait(allTeams, blaster); //change noble to any trait if you want to filter by trait
-
+    allTeams = filterByTrait(allTeams, assassin); //change noble to any trait if you want to filter by trait
+    allTeams = filterByTrait(allTeams, goblin); 
     //set specific trait scores
     // setTraitScore(noble, score_trait_2+1, score_trait_4+1, score_trait_6+1); //change noble to any trait if you want to set specific trait scores
 
@@ -173,37 +174,42 @@ void setTraitScore(int trait, int s2, int s4, int s6) {
 
 // Initialize scores
 void initializeScores() {
-   for (int i = noble; i <= pekka_trait; i++) {
+   for (int i = clan; i <= dragon; i++) {
        traitScores[i] = make_tuple(score_trait_2, score_trait_4, score_trait_6);
    }
 }
 
 vector<Troop> initializeTroops() {
     vector<Troop> troops = {
+        // Clan row
+        {barbarian_name, clan, warrior, 2},
+        {archer_name, clan, marksman, 2},
+        {valkyrie_name, clan, tank, 3},
+        {archer_queen_name, clan, superstar, 5},
+        // Noble row
+        {prince_name, noble, warrior, 4},
+        {musketeer_name, noble, marksman, 3},
+        {knight_name, noble, tank, 2},
+        {golden_knight_name, noble, assassin, 5},
+        // Goblin row
+        {goblin_demolisher_name, goblin, warrior, 3},
+        {dart_goblin_name, goblin, marksman, 2},
         {goblin_name, goblin, assassin, 2},
-        {spear_goblin_name, goblin, blaster, 2},
-        {barbarian_name, clan, brawler, 2},
-        {skeleton_dragons_name, undead, ranger, 2},
-        {wizard_name, clan, blaster, 2},
-        {musketeer_name, superstar, noble, 3},
-        {valkyrie_name, brutalist, clan, 3},
-        {pekka_name, pekka_trait, brawler, 4},
-        {prince_name, noble, brawler, 3},
-        {dart_goblin_name, goblin, ranger, 3},
-        {electro_giant_name, giant, superstar, 3},
-        {executioner_name, blaster, ace, 3},
-        {witch_name, undead, superstar, 4},
-        {princess_name, noble, blaster, 4},
-        {mega_knight_name, ace, brawler, 4},
-        {royal_ghost_name, assassin, undead, 4},
-        {bandit_name, assassin, ace, 4},
-        {goblin_machine_name, goblin, brutalist, 5},
-        {skeleton_king_name, undead, brutalist, 5},
-        {golden_knight_name, assassin, noble, 5},
-        {archer_queen_name, clan, ranger, 5},
-        {royal_giant_name, giant, ranger, 2},
-        {mini_pekka_name, pekka_trait, brutalist, 2},
-        {monk_name, ace, superstar, 5},
+        {goblin_machine_name, goblin, superstar, 4},
+        // Undead row
+        {skeleton_king_name, undead, warrior, 5},
+        {giant_skeleton_name, undead, tank, 3},
+        {witch_name, undead, hinder, 4},
+        {skeleton_dragons_name, undead, dragon, 2},
+        // Ace row
+        {monk_name, ace, tank, 5},
+        {pekka_name, ace, superstar, 4},
+        // Fire row
+        {wizard_name, fire, hinder, 2},
+        {baby_dragon_name, fire, dragon, 4},
+        // Titan row
+        {royal_giant_name, titan, marksman, 3},
+        {giant_name, titan, superstar, 3}
     };
 
     return troops;
@@ -340,9 +346,9 @@ void printSynergyBar(int trait, int count) {
         
         // Determine text color based on background brightness
         string textColor = ANSI_TEXT_WHITE; // Default
-        if (trait == noble || trait == ranger || trait == undead || 
-            trait == giant || trait == superstar || 
-            trait == brawler || trait == brutalist) {
+        if (trait == noble || trait == undead || trait == titan || 
+            trait == marksman || trait == tank || trait == superstar || 
+            trait == dragon) {
             textColor = ANSI_TEXT_BLACK;
         }
 
